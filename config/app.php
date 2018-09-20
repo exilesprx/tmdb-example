@@ -164,7 +164,6 @@ return [
          * Third part packages
          */
         Tmdb\Laravel\TmdbServiceProvider::class
-
     ],
 
     /*
