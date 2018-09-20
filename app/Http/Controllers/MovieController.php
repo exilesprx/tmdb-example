@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ShowMovieRequest;
 use App\Http\Requests\ViewMoviesRequest;
+use App\Http\Transformers\MovieTransformer;
+use League\Fractal\Resource\Item;
 use Tmdb\Repository\MovieRepository;
 
 /**
@@ -12,11 +14,17 @@ use Tmdb\Repository\MovieRepository;
  */
 class MovieController
 {
+    /** @var MovieRepository */
     private $repo;
 
-    public function __construct(MovieRepository $repository)
+    /** @var MovieTransformer */
+    private $transformer;
+
+    public function __construct(MovieRepository $repository, MovieTransformer $transformer)
     {
         $this->repo = $repository;
+
+        $this->transformer = $transformer;
     }
 
     public function index(ViewMoviesRequest $request)
@@ -26,8 +34,12 @@ class MovieController
 
     public function show(ShowMovieRequest $request, int $movieId)
     {
+        // TODO: Move logic out of controller and into an application service
         $movie = $this->repo->getApi()->getMovie($movieId);
 
-        // TODO: Use fractal transformer to convert the data into correct format
+        $resource = new Item($movie, $this->transformer);
+
+        // TODO: Abstract the response function into its own class
+        return response()->json($resource);
     }
 }
