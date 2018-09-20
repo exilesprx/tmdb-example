@@ -160,6 +160,11 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
+        /*
+         * Third part packages
+         */
+        Tmdb\Laravel\TmdbServiceProvider::class
+
     ],
 
     /*
