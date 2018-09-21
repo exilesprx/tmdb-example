@@ -15,6 +15,16 @@
                     @endif
 
                     You are logged in!
+
+                    <br/><br/>
+
+                    @if (session('token'))
+                        <div class="alert alert-success">
+                            Here is your API token. Make sure you save it somewhere safe!
+                            <br/><br/>
+                            {{ session('token') }}
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>
