@@ -161,9 +161,9 @@ return [
         App\Providers\RouteServiceProvider::class,
 
         /*
-         * Third part packages
+         *Third party
          */
-        Tmdb\Laravel\TmdbServiceProvider::class
+        Tymon\JWTAuth\Providers\JWTAuthServiceProvider::class
     ],
 
     /*
