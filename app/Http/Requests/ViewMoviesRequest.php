@@ -12,7 +12,9 @@ class ViewMoviesRequest extends FormRequest
 {
     public function rules() : array
     {
-        return [];
+        return [
+            'title' => 'string'
+        ];
     }
 
     public function authorize() : bool

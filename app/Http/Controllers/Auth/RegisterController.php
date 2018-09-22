@@ -81,9 +81,9 @@ class RegisterController extends Controller
 
         $this->guard()->login($user);
 
-        $token = JWTAuth::fromUser($user);
+        $token = $user->createToken("Token");
 
         return $this->registered($request, $user)
-            ?: redirect($this->redirectPath())->with('token', $token);
+            ?: redirect($this->redirectPath())->with('token', $token->accessToken);
     }
 }
