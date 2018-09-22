@@ -36,6 +36,7 @@ class MovieRepository
 
     protected function findAllMoviesPlayingNow() : MovieCollection
     {
+        // TODO: Put in caching layer
         $movies = $this->client->getApi()->getNowPlaying();
 
         $collection = MovieCollection::make();
