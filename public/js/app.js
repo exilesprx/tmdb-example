@@ -48262,6 +48262,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     name: client.name,
                     token: response.data.access_token
                 };
+
+                window.history.replaceState({}, document.title, "/home");
+
+                _this4.code = null;
             });
         },
         getCode: function getCode() {

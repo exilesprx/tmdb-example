@@ -399,6 +399,10 @@
                             name: client.name,
                             token: response.data.access_token
                        };
+
+                        window.history.replaceState({}, document.title, "/home");
+
+                        this.code = null;
                     });
             },
 
