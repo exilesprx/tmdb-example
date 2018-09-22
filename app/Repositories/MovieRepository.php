@@ -3,8 +3,12 @@
 namespace App\Repositories;
 
 use App\Entities\Movie;
+use App\ValueObjects\MovieCacheKey;
+use App\ValueObjects\MovieCacheTtl;
 use App\ValueObjects\MovieCollection;
 use App\ValueObjects\MovieId;
+use App\ValueObjects\MovieNowPlayingCacheKey;
+use Illuminate\Cache\CacheManager;
 use Tmdb\Repository\MovieRepository as MovieClient;
 
 /**
@@ -16,9 +20,19 @@ class MovieRepository
     /** @var MovieClient */
     private $client;
 
-    public function __construct(MovieClient $client)
+    /** @var \Illuminate\Contracts\Cache\Store */
+    private $cache;
+
+    /** @var MovieCacheTtl */
+    private $cacheTtl;
+
+    public function __construct(MovieClient $client, CacheManager $cache, MovieCacheTtl $cacheTtl)
     {
         $this->client = $client;
+
+        $this->cache = $cache->getStore();
+
+        $this->cacheTtl = $cacheTtl;
     }
 
     public function findMoviesByTitle(?string $title) : MovieCollection
@@ -36,8 +50,13 @@ class MovieRepository
 
     protected function findAllMoviesPlayingNow() : MovieCollection
     {
-        // TODO: Put in caching layer
-        $movies = $this->client->getApi()->getNowPlaying();
+        $key = MovieNowPlayingCacheKey::fromDefault();
+
+        if (!$movies = $this->cache->get($key)) {
+            $movies = $this->client->getApi()->getNowPlaying();
+
+            $this->cache->put($key, $movies, $this->cacheTtl->toInt());
+        }
 
         $collection = MovieCollection::make();
 
@@ -53,7 +72,13 @@ class MovieRepository
 
     public function findMovieById(MovieId $id) : Movie
     {
-        $movie = $this->client->getApi()->getMovie($id->getId());
+        $key = MovieCacheKey::fromMovieId($id);
+
+        if (!$movie = $this->cache->get($key)) {
+            $movie = $this->client->getApi()->getMovie($id->getId());
+
+            $this->cache->put($key, $movie, $this->cacheTtl->toInt());
+        }
 
         return new Movie($movie);
     }

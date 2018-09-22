@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\ValueObjects\MovieCacheTtl;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -23,6 +24,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $this->app->bind(
+            MovieCacheTtl::class,
+            function() {
+                return new MovieCacheTtl(env("MOVIE_CACHE_MINUTES"));
+            }
+        );
     }
 }

@@ -13,7 +13,8 @@
         "laravel/passport": "^7.0",
         "laravel/tinker": "^1.0",
         "league/fractal": "^0.17.0",
-        "php-tmdb/laravel": "^1.1"
+        "php-tmdb/laravel": "^1.1",
+        "predis/predis": "^1.1"
     },
     "require-dev": {
         "beyondcode/laravel-dump-server": "^1.0",
